@@ -48,3 +48,18 @@ yylex()
         lineno++;
     return c;
 }
+
+yyerror(s)
+    char *s;
+{
+    warning(s, (char *) 0);
+}
+
+warning(s, t)
+    char *s, *t;
+{
+    fprintf(stderr, "%s: %s", progname, s);
+    if(t)
+        fprintf(stderr, " %s", t);
+    fprintf(stderr, " near line %d\n", lineno);
+}
