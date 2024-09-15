@@ -5,12 +5,15 @@
 %token NUMBER
 %left '+' '-'
 %left '*' '/'
+%left UNARYMINUS
+
 %%
 list:
     | list '\n'
     | list expr '\n' { printf("\t%.8g\n", $2); }
     ;
 expr:   NUMBER
+    | '-' expr %prec UNARYMINUS { $$ = -$2; }
     | expr '+' expr { $$ = $1 + $3; }
     | expr '-' expr { $$ = $1 - $3; }
     | expr '*' expr { $$ = $1 * $3; }
