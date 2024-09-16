@@ -1,27 +1,36 @@
 %{
-    double mem[26];
+    #include "hoc.h"
+    extern double Pow();
 %}
 %union {
     double val;
-    int index;
+    Symbol *sym;
 }
 %token <val> NUMBER
-%token <index> VAR
-%type <val> expr
+%token <sym> VAR BLTIN UNDEF
+%type <val> expr asgn
 %right '='
 %left '+' '-'
 %left '*' '/'
 %left UNARYMINUS
+%right '^'
 
 %%
 list:
     | list '\n'
+    | list asgn '\n' 
     | list expr '\n'  { printf("\t%.8g\n", $2); }
     | list error '\n' { yyerrok; }
     ;
+asgn:   VAR '=' expr { $$ = $1 -> u.val = $3; $1 -> type = VAR;}
+    ;
 expr:   NUMBER
-    | VAR                       { $$ = mem[$1];}
-    | VAR '=' expr              { $$ = mem[$1] = $3; }
+    | VAR                       {
+        if ($1 -> type == UNDEF)
+            execerror("undefined variable", $1 -> name);
+        $$ = $1 -> u.val;}
+    | asgn
+    | BLTIN '(' expr ')'        { $$ = (*($1 -> u.ptr))($3); }
     | expr '+' expr             { $$ = $1 + $3; }
     | expr '-' expr             { $$ = $1 - $3; }
     | expr '*' expr             { $$ = $1 * $3; }
