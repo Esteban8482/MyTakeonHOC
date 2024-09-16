@@ -20,8 +20,8 @@ list:
     | list error '\n' { yyerrok; }
     ;
 expr:   NUMBER
-    | VAR                       { $$ = MEM[$1];}
-    | VAR '=' expr              { $$ = MEM[$1] = $3; }
+    | VAR                       { $$ = mem[$1];}
+    | VAR '=' expr              { $$ = mem[$1] = $3; }
     | expr '+' expr             { $$ = $1 + $3; }
     | expr '-' expr             { $$ = $1 - $3; }
     | expr '*' expr             { $$ = $1 * $3; }
