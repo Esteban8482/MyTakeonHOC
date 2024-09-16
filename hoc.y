@@ -58,6 +58,7 @@ main(argc, argv)
     int fpecatch();
 
     progname = argv[0];
+    init();
     setjmp(begin);
     signal(SIGFPE, fpecatch);
     yyparse();
@@ -91,6 +92,19 @@ yylex()
     if (islower(c)) {
         yylval.index = c - 'a';
         return VAR;
+    }
+    if (isalpha(c)) {
+        Symbol *s;
+        char sbuf[100], *p = sbuf;
+        do {
+            *p++ = c;
+        } while ((c = getchar()) != EOF && isalnum(c))
+        ungetc(c, stdin);
+        *p = '\0';
+        if ((s = lookup(sbuf)) == 0)
+            s = install(sbuf, UNDEF, 0.0);
+        yylval.sym = s;
+        return s -> type == UNDEF ? VAR : s -> type;
     }
     if (c == '\n')
         lineno++;
