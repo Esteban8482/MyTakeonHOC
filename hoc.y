@@ -90,7 +90,7 @@ yylex()
         return NUMBER;
     }
     if (islower(c)) {
-        yylval.index = c - 'a';
+        yylval.val = c - 'a';
         return VAR;
     }
     if (isalpha(c)) {
@@ -98,7 +98,7 @@ yylex()
         char sbuf[100], *p = sbuf;
         do {
             *p++ = c;
-        } while ((c = getchar()) != EOF && isalnum(c))
+        } while ((c = getchar()) != EOF && isalnum(c));
         ungetc(c, stdin);
         *p = '\0';
         if ((s = lookup(sbuf)) == 0)

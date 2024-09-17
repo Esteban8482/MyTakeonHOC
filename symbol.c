@@ -8,9 +8,10 @@ Symbol *lookup(s)
 {
     Symbol *sp;
 
-    for (sp = symlist; sp != (Symbol *) 0; sp = sp->next)
+    for (sp = symlist; sp != (Symbol *) 0; sp = sp -> next)
         if (strcmp(sp -> name, s) == 0)
             return sp;
+    printf("lookup: %s not found\n", s);
     return 0;
 }
 
