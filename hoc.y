@@ -22,10 +22,17 @@ list:
     | list expr '\n'  { printf("\t%.8g\n", $2); }
     | list error '\n' { yyerrok; }
     ;
-asgn:   VAR '=' expr { $$ = $1 -> u.val = $3; $1 -> type = VAR;}
+asgn:   VAR '=' expr {
+            if ($1 == 0)
+                execerror("undefined variable", "");
+            $$ = $1 -> u.val = $3;
+            $1 -> type = VAR;
+}
     ;
 expr:   NUMBER
     | VAR                       {
+        if ($1 == 0)
+            execerror("illegal variable", "");
         if ($1 -> type == UNDEF)
             execerror("undefined variable", $1 -> name);
         $$ = $1 -> u.val;}

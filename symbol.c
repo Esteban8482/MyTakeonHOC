@@ -11,7 +11,7 @@ Symbol *lookup(s)
     for (sp = symlist; sp != (Symbol *) 0; sp = sp -> next)
         if (strcmp(sp -> name, s) == 0)
             return sp;
-    printf("lookup: %s not found\n", s);
+    execerror("lookup: variable not found", s);
     return 0;
 }
 
